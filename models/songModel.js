@@ -1,19 +1,19 @@
-const pool = require("../db");
+import pool from '../db.js'
 
-exports.createSong = async (title, artist) => {
+export async function createSong(title, artist, userId) {
   const result = await pool.query(
-    "INSERT INTO songs (title, artist) VALUES ($1, $2)",
-    [title, artist]
+    "INSERT INTO songs (title, artist, user_id) VALUES ($1, $2, $3)",
+    [title, artist, userId]
   );
   return result.rows[0];
 };
 
-exports.getAllSongs = async () => {
+export async function getAllSongs() {
   const result = await pool.query("SELECT * FROM songs");
   return result.rows;
 };
 
-exports.findById = async (id) => {
+export async function findById(id) {
   const result = await pool.query("SELECT * FROM songs WHERE id = $1", [id]);
   return result.rows[0];
 };

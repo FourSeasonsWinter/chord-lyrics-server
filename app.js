@@ -1,43 +1,24 @@
-require("dotenv").config();
-const express = require("express");
-const cors = require("cors");
-const session = require("express-session");
-const passport = require("passport");
+import { config } from "dotenv";
+import express from "express";
+import cors from "cors";
 const app = express();
-
-require("./config/passport");
+config();
 
 // Import routes
-const authRoutes = require("./routes/auth");
-const songRoutes = require("./routes/song")
+import songsRouter from "./routes/songs.js";
 
 // Middleware
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: process.env.APP_URL,
     credentials: true,
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type"],
   })
 );
 app.use(express.json());
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      httpOnly: true,
-      secure: false,
-      maxAge: 1000 * 60 * 60 * 24,
-    },
-  })
-);
-app.use(passport.initialize());
-app.use(passport.session());
 
 // Routes
-app.use("/auth", authRoutes);
-app.use("/song", songRoutes)
+app.use("/songs", songsRouter);
 
-module.exports = app;
+export default app;

@@ -5,7 +5,9 @@ const app = express();
 config();
 
 // Import routes
+import usersRouter from "./routes/users.js";
 import songsRouter from "./routes/songs.js";
+import lyricsRouter from "./routes/lyrics.js";
 
 // Middleware
 app.use(
@@ -19,6 +21,8 @@ app.use(
 app.use(express.json());
 
 // Routes
+app.use("/users", usersRouter);
 app.use("/songs", songsRouter);
+app.use("/lyrics", lyricsRouter);
 
 export default app;

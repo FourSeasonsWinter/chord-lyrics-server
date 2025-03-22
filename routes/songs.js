@@ -1,5 +1,11 @@
-import express from 'express'
-import { createSong, getAllSongs, findById } from '../models/songModel.js';
+import express from "express";
+import {
+  createSong,
+  getAllSongs,
+  findById,
+  findByQuery,
+  findByUserId,
+} from "../models/songsModel.js";
 const router = express.Router();
 
 router.get("/", async (req, res) => {
@@ -17,25 +23,54 @@ router.get("/:id", async (req, res) => {
     const id = req.params.id;
     const result = await findById(id);
 
-    if (!result)
-      res.status(404).json({ message: 'song id not found' })
+    if (!result) res.status(404).json({ message: "song id not found" });
 
     res.json(result);
   } catch (err) {
-    console.log(err);
+    console.error(err);
+    res.status(500).send("internal server error");
+  }
+});
+
+router.get("/query/:query", async (req, res) => {
+  try {
+    const query = req.params.query;
+    const result = await findByQuery(query);
+
+    res.json(result);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("internal server error");
+  }
+});
+
+router.get("/user/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const result = await findByUserId(id);
+
+    if (!result)
+      res
+        .status(404)
+        .json({ message: "no songs created by this user id was found" });
+
+    res.json(result);
+  } catch (err) {
+    console.error(err);
     res.status(500).send("internal server error");
   }
 });
 
 router.post("/", async (req, res) => {
-  const { title, artist, userId } = req.body;
+  const { userId, details } = req.body;
 
   try {
-    await createSong(title, artist, userId);
-    res.status(201).json({ message: title + " saved to db" });
+    const id = await createSong(userId, details);
+    console.log('id', id)
+    res.status(201).json({ id: id });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "error saving to db" });
+    res.status(500).send("error saving to db");
   }
 });
 

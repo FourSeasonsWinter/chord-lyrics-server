@@ -10,8 +10,9 @@ export async function createSong(userId, details) {
   return result.rows[0].id;
 }
 
-export async function getAllSongs() {
-  const result = await pool.query("SELECT * FROM songs");
+export async function getPopularSongs() {
+  // TODO - query most accessed songs
+  const result = await pool.query("SELECT * FROM songs LIMIT 6");
   return result.rows;
 }
 

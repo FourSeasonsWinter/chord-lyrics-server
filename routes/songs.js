@@ -1,7 +1,7 @@
 import express from "express";
 import {
   createSong,
-  getAllSongs,
+  getPopularSongs,
   findById,
   findByQuery,
   findByUserId,
@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.get("/", async (req, res) => {
   try {
-    const result = await getAllSongs();
+    const result = await getPopularSongs();
     res.json(result);
   } catch (err) {
     console.error(err);
@@ -66,7 +66,6 @@ router.post("/", async (req, res) => {
 
   try {
     const id = await createSong(userId, details);
-    console.log('id', id)
     res.status(201).json({ id: id });
   } catch (err) {
     console.error(err);

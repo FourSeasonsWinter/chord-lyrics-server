@@ -5,7 +5,9 @@ import {
   findById,
   findByQuery,
   findByUserId,
+  updateSongDetails,
 } from "../models/songsModel.js";
+import pool from "../db.js";
 const router = express.Router();
 
 router.get("/", async (req, res) => {
@@ -67,6 +69,19 @@ router.post("/", async (req, res) => {
   try {
     const id = await createSong(userId, details);
     res.status(201).json({ id: id });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("error saving to db");
+  }
+});
+
+router.put("/:songId", async (req, res) => {
+  const songId = req.params.songId;
+  const updatedData = req.body;
+
+  try {
+    await updateSongDetails(updatedData, songId);
+    res.status(200).json({ message: "song updated", id: songId });
   } catch (err) {
     console.error(err);
     res.status(500).send("error saving to db");

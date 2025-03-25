@@ -1,11 +1,11 @@
 import pool from "../db.js";
 
 export async function createUser(user) {
-  const { id, name, email } = user;
+  const { id, name, email, provider } = user;
 
   const result = await pool.query(
-    "INSERT INTO users VALUES ($1, $2, $3)",
-    [id, name, email]
+    "INSERT INTO users (id, name, email, provider) VALUES ($1, $2, $3, $4)",
+    [id, name, email, provider]
   );
   return result.rows[0];
 }

@@ -36,3 +36,12 @@ export async function findByUserId(userId) {
   ]);
   return result.rows;
 }
+
+export async function updateSongDetails(details, songId) {
+  const result = await pool.query(
+    "UPDATE songs SET title = $1, artist = $2 WHERE id = $3",
+    [details.title, details.artist, songId]
+  );
+
+  return result.rows[0];
+}
